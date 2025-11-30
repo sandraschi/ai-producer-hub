@@ -1,0 +1,40 @@
+# AI Producer Hub - Cursor Rules
+
+## Project Overview
+Composite MCP server for AI-powered music production workflows.
+Mounts and orchestrates multiple MCP servers (VirtualDJ, Plex, Suno, Reaper, OBS).
+
+## Architecture
+- `server.py`: Main FastMCP server with workflow tools
+- `tools/midi.py`: MIDI input/output tools
+- Mounts other MCP servers at prefixed paths (/dj/*, /plex/*, etc.)
+
+## Tool Patterns
+- All tools use `@mcp.tool()` decorator
+- MIDI tools registered via `setup_midi_tools(mcp)` pattern
+- Workflow tools return framework_ready status when dependencies unavailable
+
+## Mounted Servers
+- `/dj/*` - VirtualDJ-MCP (mixing, stems, 8 decks)
+- `/plex/*` - Plex-MCP (media library)
+- `/suno/*` - Suno-MCP (AI generation)
+- `/reaper/*` - Reaper-MCP (DAW)
+- `/obs/*` - OBS-MCP (streaming)
+
+## Code Style
+- Use Rich console for stderr output (not stdout)
+- Async/await for all tool implementations
+- Type hints required
+- Docstrings with Args/Returns sections
+
+## Key Workflows
+1. suno_to_deck: Generate AI track -> Load to DJ deck
+2. ai_dj_set: Generate multiple tracks -> Auto-mix
+3. live_stream_producer: Generate + Mix + Stream live
+4. album_factory: Theme -> Full album -> Plex
+
+## Dependencies
+- fastmcp>=2.13.0
+- rich (for console output)
+- python-rtmidi, mido (optional, for MIDI)
+
