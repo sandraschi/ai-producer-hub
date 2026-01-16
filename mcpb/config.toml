@@ -3,7 +3,7 @@
 
 [package]
 name = "ai-producer-hub"
-version = "1.0.0"
+version = "1.0.0a1"
 description = "🤖 MASSIVE AI INTEGRATION - AUTONOMOUS MUSIC PRODUCTION 🤖"
 authors = ["Sandra Schipal <sandra@sandraschi.dev>"]
 license = "MIT"
@@ -67,7 +67,7 @@ github_releases = true
 
 [distribution.pypi]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
     "License :: OSI Approved :: MIT License",

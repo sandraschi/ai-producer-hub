@@ -29,7 +29,7 @@ ai_producer_hub = ["py.typed"]
 requires-python = ">=3.11,<3.13"
 keywords = ["mcp", "ai", "music", "producer", "dj", "levo", "songgeneration", "virtualdj", "plex", "reaper", "obs"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
     "License :: OSI Approved :: MIT License",
