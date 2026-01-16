@@ -1,0 +1,34 @@
+# Zed Extensions for AI Producer Hub Development
+# These extensions enhance the development experience for MCP servers and music production
+
+[extensions]
+# Python Development
+python = "zed-industries/python"  # Official Python support
+ruff = "astral-sh/ruff"           # Fast Python linter and formatter
+pyright = "zed-industries/pyright" # Microsoft's Python type checker
+
+# MCP Development
+mcp = "sourcegraph/mcp"           # MCP protocol support
+fastmcp = "anthropic/fastmcp"     # FastMCP framework support
+
+# Music Production
+midi = "music-tools/midi"         # MIDI file support
+audio = "audio-tools/audio"       # Audio file handling
+
+# Documentation
+markdown = "zed-industries/markdown"  # Enhanced Markdown support
+toml = "zed-industries/toml"         # TOML configuration files
+json = "zed-industries/json"         # JSON file support
+
+# Development Tools
+git-graph = "mhutchie/git-graph"     # Git history visualization
+docker = "zed-industries/docker"     # Docker integration
+terminal = "zed-industries/terminal" # Enhanced terminal
+
+# AI/ML Development
+jupyter = "zed-industries/jupyter"   # Jupyter notebook support
+yaml = "zed-industries/yaml"         # YAML for configuration
+
+# Collaboration
+github = "zed-industries/github"     # GitHub integration
+copilot = "zed-industries/copilot"   # GitHub Copilot support

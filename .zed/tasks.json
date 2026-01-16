@@ -1,0 +1,57 @@
+{
+  "version": "0.2.0",
+  "tasks": [
+    {
+      "label": "Run AI Producer Hub",
+      "command": "python",
+      "args": ["-m", "ai_producer_hub"],
+      "cwd": ".",
+      "env": {
+        "PYTHONPATH": "src"
+      },
+      "tags": ["run", "server"]
+    },
+    {
+      "label": "Install Dependencies",
+      "command": "uv",
+      "args": ["pip", "install", "-e", ".[dev,ai]"],
+      "tags": ["setup", "deps"]
+    },
+    {
+      "label": "Run Tests",
+      "command": "python",
+      "args": ["-m", "pytest", "tests/", "-v", "--cov=src"],
+      "tags": ["test", "coverage"]
+    },
+    {
+      "label": "Lint & Format",
+      "command": "ruff",
+      "args": ["check", ".", "--fix"],
+      "tags": ["lint", "format"]
+    },
+    {
+      "label": "Type Check",
+      "command": "mypy",
+      "args": ["src/"],
+      "tags": ["type-check"]
+    },
+    {
+      "label": "Build MCPB Package",
+      "command": "python",
+      "args": ["-c", "import mcpb; mcpb.build()"],
+      "tags": ["build", "package"]
+    },
+    {
+      "label": "Generate Documentation",
+      "command": "python",
+      "args": ["-c", "from ai_producer_hub.ai_integration import AIProducerAgent; print('AI Integration Ready')"],
+      "tags": ["docs"]
+    },
+    {
+      "label": "Check MCP Standards",
+      "command": "python",
+      "args": ["scripts/check-repo-standards.ps1"],
+      "tags": ["standards", "compliance"]
+    }
+  ]
+}

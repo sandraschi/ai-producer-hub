@@ -1,34 +1,126 @@
 {
-  "name": "ai-producer-hub",
-  "version": "1.0.0",
-  "description": "AI Producer Hub - The Ultimate AI Music Production MCP Server. Mount Suno, VirtualDJ, Plex, Reaper, and OBS for cross-server AI music workflows.",
-  "author": "Sandra",
-  "license": "MIT",
-  "repository": "https://github.com/sandraschi/ai-producer-hub",
-  "tools": [
-    "suno_to_deck",
-    "ai_dj_set",
-    "remix_plex_track",
-    "bpm_bridge_generator",
-    "live_stream_producer",
-    "album_factory",
-    "karaoke_generator",
-    "ai_mashup",
-    "hub_status",
-    "producer_help"
-  ],
-  "entry": "src/ai_producer_hub/server.py",
-  "python_version": ">=3.10",
-  "dependencies": {
-    "fastmcp": ">=2.13.0",
-    "rich": ">=13.0.0"
+  "mcpServers": {
+    "ai-producer-hub": {
+      "command": "python",
+      "args": ["-m", "ai_producer_hub"],
+      "cwd": ".",
+      "env": {
+        "PYTHONPATH": "src"
+      }
+    }
   },
+  "package": {
+    "name": "ai-producer-hub",
+    "version": "1.0.0",
+    "description": "🤖 MASSIVE AI INTEGRATION - AUTONOMOUS MUSIC PRODUCTION 🤖 SEP-1577 + Conversational AI for professional music creation",
+    "authors": [
+      {
+        "name": "Sandra Schipal",
+        "email": "sandra@sandraschi.dev"
+      }
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/sandraschi/ai-producer-hub",
+    "repository": "https://github.com/sandraschi/ai-producer-hub",
+    "keywords": ["mcp", "ai", "music", "producer", "dj", "levo", "autonomous", "llm"],
+    "categories": ["multimedia", "productivity", "ai", "music"]
+  },
+  "mcp": {
+    "protocol_version": "2024-11-05",
+    "capabilities": {
+      "tools": {
+        "autonomous_execution": true,
+        "conversational_returns": true,
+        "streaming_responses": true
+      },
+      "sampling": {
+        "enabled": true,
+        "max_parallel_calls": 5,
+        "timeout_seconds": 300
+      },
+      "resources": {
+        "types": ["markdown", "json", "audio", "midi"]
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "ai_produce_track",
+      "description": "🤖 AI-driven complete autonomous track production pipeline"
+    },
+    {
+      "name": "ai_orchestrate_production",
+      "description": "SEP-1577 sampling: AI plans and executes complex workflows autonomously"
+    },
+    {
+      "name": "ai_collaborate_workflow",
+      "description": "Conversational AI collaboration for production guidance"
+    },
+    {
+      "name": "songgen_to_deck",
+      "description": "Generate professional vocals + backing tracks, load to VirtualDJ"
+    },
+    {
+      "name": "ai_dj_set",
+      "description": "Generate multiple tracks for complete DJ sets"
+    },
+    {
+      "name": "live_stream_producer",
+      "description": "Autonomous live streaming with AI-generated content"
+    },
+    {
+      "name": "ai_analyze_production",
+      "description": "AI-powered analysis of production progress and quality"
+    },
+    {
+      "name": "hub_status",
+      "description": "Comprehensive hub status and mounted server information"
+    }
+  ],
   "mounts": {
-    "/dj": "virtualdj-mcp",
-    "/plex": "plex-mcp",
-    "/suno": "suno-mcp",
-    "/reaper": "reaper-mcp",
-    "/obs": "obs-mcp"
+    "/dj": {
+      "server": "virtualdj-mcp",
+      "description": "VirtualDJ mixing, stems, video, 8 decks",
+      "tools": 61
+    },
+    "/plex": {
+      "server": "plex-mcp",
+      "description": "Media library management",
+      "tools": 15
+    },
+    "/songgen": {
+      "server": "songgeneration-mcp",
+      "description": "LeVo AI vocals + professional backing tracks",
+      "tools": 7
+    },
+    "/reaper": {
+      "server": "reaper-mcp",
+      "description": "DAW control and mastering",
+      "tools": 25
+    },
+    "/obs": {
+      "server": "obs-mcp",
+      "description": "Live streaming production",
+      "tools": 20
+    }
+  },
+  "ai": {
+    "integration_level": "massive",
+    "autonomous_capabilities": true,
+    "providers": ["anthropic", "openai"],
+    "orchestration": {
+      "max_concurrent_productions": 3,
+      "production_timeout_minutes": 30,
+      "quality_checks_enabled": true
+    }
+  },
+  "development": {
+    "python_version": ">=3.11",
+    "build_system": "hatchling",
+    "linting": ["ruff", "mypy"],
+    "testing": ["pytest", "coverage"],
+    "formatting": ["ruff"],
+    "editor": "zed"
   }
 }
 

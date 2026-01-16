@@ -1,0 +1,134 @@
+# MCPB Configuration for AI Producer Hub
+# Model Context Protocol Binary packaging for modern MCP server distribution
+
+[package]
+name = "ai-producer-hub"
+version = "1.0.0"
+description = "🤖 MASSIVE AI INTEGRATION - AUTONOMOUS MUSIC PRODUCTION 🤖"
+authors = ["Sandra Schipal <sandra@sandraschi.dev>"]
+license = "MIT"
+homepage = "https://github.com/sandraschi/ai-producer-hub"
+repository = "https://github.com/sandraschi/ai-producer-hub"
+
+[package.metadata]
+keywords = ["mcp", "ai", "music", "producer", "dj", "levo", "autonomous", "llm"]
+categories = ["multimedia", "productivity", "ai", "music"]
+
+[build]
+python_version = ">=3.11"
+include_patterns = [
+    "src/**/*",
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+    "manifest.json"
+]
+exclude_patterns = [
+    "**/__pycache__/**",
+    "**/*.pyc",
+    "**/.git/**",
+    "**/tests/**",
+    "**/.github/**",
+    "**/docs/**"
+]
+
+[build.dependencies]
+# Core dependencies bundled in the package
+bundled = [
+    "fastmcp>=2.14.3",
+    "aiohttp>=3.9.0",
+    "aiofiles>=23.2.0",
+    "pydantic>=2.0.0",
+    "rich>=13.0.0",
+    "python-rtmidi>=1.5.0",
+    "mido>=1.3.0"
+]
+
+# Optional dependencies that users can install
+optional = [
+    { name = "ai", deps = ["openai>=1.0.0", "anthropic>=0.30.0"] },
+    { name = "dev", deps = ["pytest>=8.0.0", "ruff>=0.1.0", "mypy>=1.0.0"] }
+]
+
+[build.scripts]
+# CLI entry points
+ai-producer-hub = "ai_producer_hub.server:main"
+
+[build.resources]
+# Static resources to include
+include = [
+    "src/ai_producer_hub/_version.py"
+]
+
+[distribution]
+# Distribution channels
+pypi = true
+github_releases = true
+
+[distribution.pypi]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Framework :: FastMCP",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Artistic Software",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+
+[distribution.github]
+prerelease = false
+draft = false
+generate_release_notes = true
+
+[mcp]
+# MCP-specific configuration
+protocol_version = "2024-11-05"
+capabilities = ["tools", "sampling", "resources"]
+
+[mcp.tools]
+# Tool capabilities
+autonomous_execution = true
+conversational_returns = true
+streaming_responses = true
+
+[mcp.resources]
+# Resource types provided
+types = ["markdown", "json", "audio", "midi"]
+
+[mcp.sampling]
+# SEP-1577 sampling capabilities
+enabled = true
+max_parallel_calls = 5
+timeout_seconds = 300
+
+[ai]
+# AI integration configuration
+providers = ["anthropic", "openai"]
+default_provider = "anthropic"
+model = "claude-3-5-sonnet-20241022"
+
+[ai.orchestration]
+# Autonomous workflow capabilities
+max_concurrent_productions = 3
+production_timeout_minutes = 30
+quality_checks_enabled = true
+
+[development]
+# Development environment configuration
+editor = "zed"
+linting = ["ruff", "mypy"]
+testing = ["pytest", "coverage"]
+formatting = ["ruff"]
+
+[development.pre-commit]
+enabled = true
+hooks = [
+    "ruff",
+    "mypy",
+    "pytest"
+]

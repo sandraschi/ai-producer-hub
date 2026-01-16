@@ -1,0 +1,80 @@
+{
+  "languages": {
+    "Python": {
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "ruff",
+          "arguments": ["format", "--stdin-filename", "{buffer_path}", "-"]
+        }
+      },
+      "language_servers": ["pyright", "!ruff"],
+      "lsp_settings": {
+        "pyright": {
+          "python": {
+            "pythonPath": "./venv/Scripts/python.exe",
+            "analysis": {
+              "typeCheckingMode": "strict",
+              "autoSearchPaths": true,
+              "useLibraryCodeForTypes": true,
+              "diagnosticMode": "openFilesOnly"
+            }
+          }
+        }
+      }
+    },
+    "TOML": {
+      "format_on_save": "on"
+    },
+    "Markdown": {
+      "format_on_save": "on",
+      "soft_wrap": "preferred_line_length"
+    }
+  },
+  "lsp": {
+    "ruff": {
+      "binary": {
+        "path": "ruff",
+        "arguments": ["server"]
+      },
+      "settings": {
+        "configuration": "pyproject.toml",
+        "lineLength": 100,
+        "targetVersion": "py311"
+      }
+    }
+  },
+  "formatter": {
+    "external": {
+      "command": "ruff",
+      "arguments": ["format", "--stdin-filename", "{buffer_path}", "-"]
+    }
+  },
+  "tab_size": 4,
+  "hard_tabs": false,
+  "preferred_line_length": 100,
+  "format_on_save": "on",
+  "remove_trailing_whitespace_on_save": true,
+  "ensure_final_newline_on_save": true,
+  "show_whitespaces": "selection",
+  "file_types": {
+    "Python": ["*.py", "*.pyi"],
+    "TOML": ["*.toml", "pyproject.toml", "Cargo.toml"],
+    "JSON": ["*.json", "*.jsonc", "manifest.json"],
+    "Markdown": ["*.md", "*.markdown"],
+    "YAML": ["*.yml", "*.yaml"]
+  },
+  "mcp": {
+    "enabled": true,
+    "servers": {
+      "ai-producer-hub": {
+        "command": "python",
+        "args": ["-m", "ai_producer_hub"],
+        "cwd": ".",
+        "env": {
+          "PYTHONPATH": "src"
+        }
+      }
+    }
+  }
+}

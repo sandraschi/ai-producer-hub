@@ -21,7 +21,7 @@ def test_tools_registered():
     from ai_producer_hub import server
     
     # Check workflow functions exist
-    assert hasattr(server, 'suno_to_deck')
+    assert hasattr(server, 'songgen_to_deck')
     assert hasattr(server, 'ai_dj_set')
     assert hasattr(server, 'remix_plex_track')
     assert hasattr(server, 'bpm_bridge_generator')
@@ -58,15 +58,19 @@ async def test_producer_help():
 
 
 @pytest.mark.asyncio
-async def test_suno_to_deck_framework():
-    """Test suno_to_deck returns framework response."""
-    from ai_producer_hub.server import suno_to_deck
-    
-    result = await suno_to_deck("test prompt", deck_id=1)
-    
+async def test_songgen_to_deck_framework():
+    """Test songgen_to_deck returns framework response."""
+    from ai_producer_hub.server import songgen_to_deck
+
+    result = await songgen_to_deck(
+        lyrics="test lyrics",
+        genre="Electronic",
+        deck_id=1
+    )
+
     assert "workflow" in result
-    assert result["workflow"] == "suno_to_deck"
-    assert "prompt" in result
+    assert result["workflow"] == "songgen_to_deck"
+    assert "lyrics_preview" in result
 
 
 @pytest.mark.asyncio

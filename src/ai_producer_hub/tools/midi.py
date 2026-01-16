@@ -350,7 +350,7 @@ def setup_midi_tools(mcp: FastMCP):
             1. Play a 4-bar melody on your keyboard
             2. record_midi_performance() saves it
             3. midi_to_ai_seed() analyzes and generates prompt
-            4. suno_to_deck() creates full track from your melody!
+            4. songgen_to_deck() creates professional track with vocals from your melody!
         """
         try:
             if not MIDO_AVAILABLE:
@@ -413,7 +413,7 @@ def setup_midi_tools(mcp: FastMCP):
                 "generated_prompt": prompt,
                 "expansion_style": expansion_style,
                 "target_duration": target_duration,
-                "next_step": "Use this prompt with suno_to_deck() to generate full track!"
+                "next_step": "Use these lyrics with songgen_to_deck() to generate professional track with vocals!"
             }
             
         except Exception as e:

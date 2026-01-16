@@ -1,159 +1,174 @@
-# AI Producer Hub 🎹🤖
+# AI Producer Hub
 
-**1983 MIDI Standard + 2025 AI = The Future of Music Production**
+A Model Context Protocol server that integrates AI-powered music generation with professional production tools, enabling autonomous music creation workflows from MIDI input to live streaming.
 
-Plink a melody on your synth. AI turns it into a full track. Load it to VirtualDJ. Mix 8 decks. Stream live.
+## Overview
 
-All in one server.
+The AI Producer Hub bridges traditional MIDI hardware with modern AI music generation, providing a complete production environment that combines:
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                                                                             │
-│   🎹 MIDI In ──► 🤖 AI Generation ──► 🎧 DJ Mix ──► 📺 Live Stream         │
-│                                                                             │
-│   Your 4-bar melody becomes a 3-minute banger in 60 seconds                 │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+- Real-time MIDI hardware integration
+- AI-powered vocal and instrumental generation
+- Professional mixing and mastering tools
+- Automated DJ mixing and live streaming
 
-## The Vision
+## Architecture
 
-**NO HUMAN CAN:**
-- Generate a track from a prompt in 30 seconds
-- Mix 8 AI-generated tracks simultaneously  
-- Create a full album in an hour
-- Live stream with infinite unique content
-- Turn a MIDI doodle into a produced track instantly
+## Components
 
-**AI CAN.** This hub makes it happen.
+The hub integrates multiple specialized MCP servers:
 
-## Mounted Servers
+| Component | Mount Point | Tools | Description |
+|-----------|-------------|-------|-------------|
+| VirtualDJ-MCP | `/dj/*` | 61 | Professional DJ mixing, stem separation, video integration |
+| Plex-MCP | `/plex/*` | 15 | Media library management and organization |
+| SongGeneration-MCP | `/songgen/*` | 7 | AI-powered vocal and instrumental generation |
+| Reaper-MCP | `/reaper/*` | 25 | Digital audio workstation and mastering |
+| OBS-MCP | `/obs/*` | 20 | Live streaming and broadcasting |
+| Local MIDI Tools | (root) | 8 | Hardware MIDI device integration |
 
-| Server | Mount | Tools | Purpose |
-|--------|-------|-------|---------|
-| VirtualDJ-MCP | `/dj/*` | 61 | Mixing, stems, video, 8 decks |
-| Plex-MCP | `/plex/*` | 15 | Media library |
-| Suno-MCP | `/suno/*` | ? | AI music generation |
-| Reaper-MCP | `/reaper/*` | ? | DAW/mastering |
-| OBS-MCP | `/obs/*` | ? | Live streaming |
-| **+ Local MIDI** | (root) | 8 | Hardware I/O |
+## AI Integration
 
-## MIDI Tools - Your Hardware, AI's Brain
+The hub includes advanced AI orchestration capabilities:
 
-```
-┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
-│  Your Synth/     │    │  AI Producer     │    │  Full Track      │
-│  Keyboard        │───►│  Hub             │───►│  Ready to Mix    │
-│  (MIDI out)      │    │  (MIDI → AI)     │    │  (VirtualDJ)     │
-└──────────────────┘    └──────────────────┘    └──────────────────┘
-```
+- **SEP-1577 Sampling**: Autonomous tool orchestration without client round-trips
+- **Conversational AI**: Natural language production guidance
+- **Autonomous Workflows**: Complete production pipelines managed by AI agents
+- **Multi-Provider Support**: Integration with Anthropic Claude and OpenAI GPT models
 
-### MIDI Workflow
+## MIDI Integration
+
+The hub provides comprehensive MIDI hardware integration with AI-enhanced processing:
+
+### Basic MIDI Workflow
 
 ```python
-# 1. Check your devices
+# 1. Enumerate connected MIDI devices
 list_midi_devices()
-# Returns: {"inputs": ["MPK mini 3", "Arturia KeyLab"], ...}
+# Returns device information for inputs and outputs
 
-# 2. Record your melody (play something!)
+# 2. Record MIDI performance
 record_midi_performance(device_index=0, duration_seconds=30)
-# Saves to: ~/Music/AI-Producer-Hub/MIDI-Recordings/recording_20251128_143022.mid
+# Captures live performance to timestamped MIDI file
 
-# 3. AI analyzes and generates a prompt
+# 3. AI-assisted content generation
 midi_to_ai_seed("recording.mid", expansion_style="full_production")
-# Returns: "Create a full production track in C major, 
-#           with drums, bass, pads, target duration 120 seconds"
+# Analyzes MIDI and generates structured content for AI processing
 
-# 4. Generate the full track!
-suno_to_deck(generated_prompt, deck=1)
-# Your 4-bar melody is now a full track on Deck 1!
+# 4. Generate complete track with AI vocals
+songgen_to_deck(lyrics, genre="Electronic", tempo=128, deck=1)
+# Produces professional vocal and instrumental tracks
 ```
 
-### Available MIDI Tools
+### MIDI Tools
 
 | Tool | Description |
 |------|-------------|
-| `list_midi_devices` | Scan for connected MIDI hardware |
-| `record_midi_performance` | Capture your playing to MIDI file |
-| `send_midi_note` | Send notes to synths/modules |
-| `play_midi_file` | Play MIDI through your hardware |
-| `midi_monitor` | Debug/test MIDI connections |
-| `midi_to_reaper` | Import MIDI to DAW for rendering |
-| `midi_to_ai_seed` | Analyze MIDI → Generate AI prompt |
+| `list_midi_devices` | Enumerate connected MIDI hardware devices |
+| `record_midi_performance` | Capture live MIDI performance to file |
+| `send_midi_note` | Send MIDI notes to connected devices |
+| `play_midi_file` | Play MIDI files through hardware outputs |
+| `midi_monitor` | Monitor and debug MIDI data streams |
+| `midi_to_reaper` | Import MIDI data to Reaper DAW |
+| `midi_to_ai_seed` | Analyze MIDI for AI content generation |
 
-## Cross-Server Workflows
+## Workflows
 
-### Generate & Mix
+### AI-Powered Production
+
+#### Autonomous Track Generation
 ```python
-# AI DJ set from a theme
-ai_dj_set("dark techno warehouse", num_tracks=6)
-
-# Single track to deck
-suno_to_deck("synthwave 128bpm neon city", deck=1)
+# Generate complete track with AI orchestration
+ai_produce_track(
+    theme="cyberpunk neon city",
+    genre="Electronic",
+    bpm=128,
+    voice_type="Male"
+)
+# AI manages: lyrics → vocals → stems → mixing → mastering → DJ integration
 ```
 
-### MIDI → AI → DJ
+#### Conversational Production Guidance
 ```python
-# Record your melody
+# Natural language production assistance
+ai_collaborate_workflow(
+    "Help me make this mix more energetic"
+)
+# AI provides contextual analysis and suggestions
+```
+
+#### Automated DJ Sets
+```python
+ai_dj_set("progressive house summer", num_tracks=6)
+# Generates themed track collection with harmonic mixing analysis
+```
+
+### MIDI-to-Production Pipeline
+```python
+# 1. Record MIDI performance
 record_midi_performance(0, 30)
 
-# AI expands it
+# 2. AI content analysis and generation
 midi_to_ai_seed("recording.mid", "full_production")
 
-# Generate and load
-suno_to_deck(prompt, deck=1)
-
-# Mix with 7 other tracks!
+# 3. Complete track production
+songgen_to_deck(lyrics, genre="Electronic", tempo=128, deck=1)
 ```
 
-### Live Stream Producer
+### Large-Scale Production
 ```python
-live_stream_producer(
-    theme="lo-fi study beats",
+# Album production with AI orchestration
+ai_orchestrate_production(
+    "Create a 10-track concept album about space exploration",
+    available_tools=["songgen", "reaper", "plex"]
+)
+```
+
+### Live Streaming
+```python
+# Automated streaming production
+ai_stream_production(
+    theme="ambient electronic",
     duration_hours=2,
     platform="twitch"
 )
-# AI generates tracks continuously while you stream!
-```
-
-### Album Factory
-```python
-album_factory(
-    "cyberpunk noir detective neo-tokyo",
-    num_tracks=12,
-    album_title="Neon Shadows"
-)
-# Full album, saved to Plex library!
+# AI manages continuous content generation and streaming setup
 ```
 
 ## Installation
 
-```powershell
-# Clone
+### Requirements
+- Python 3.11 or later
+- MIDI hardware (optional, for hardware integration)
+- Component MCP servers (VirtualDJ, Plex, SongGeneration, Reaper, OBS)
+
+### Basic Installation
+```bash
+# Clone repository
 git clone https://github.com/sandraschi/ai-producer-hub.git
 cd ai-producer-hub
 
-# Create venv (Python 3.11 for aubio compatibility)
-uv venv --python 3.11
-.venv\Scripts\Activate.ps1
+# Install with uv (recommended)
+uv pip install -e .[dev,ai]
 
-# Install
-uv pip install -e .
-
-# Install component servers
-uv pip install -e D:\Dev\repos\virtualdj-mcp
-uv pip install -e D:\Dev\repos\plexmcp
-uv pip install -e D:\Dev\repos\suno-mcp
-# ... etc
+# Or with pip
+pip install -e .[dev,ai]
 ```
 
-### MIDI Requirements
+### Component Servers
+Install the required MCP server components:
 
-For MIDI functionality on Windows:
-- `python-rtmidi` requires Visual C++ Build Tools
-- Or install pre-built wheel: `pip install python-rtmidi`
+```bash
+# Install component servers (adjust paths as needed)
+uv pip install -e /path/to/virtualdj-mcp
+uv pip install -e /path/to/plex-mcp
+uv pip install -e /path/to/songgeneration-mcp
+uv pip install -e /path/to/reaper-mcp
+uv pip install -e /path/to/obs-mcp
+```
 
-## Claude Desktop Config
+### MCP Server Configuration
+
+Add to your MCP client configuration:
 
 ```json
 {
@@ -161,103 +176,152 @@ For MIDI functionality on Windows:
     "ai-producer-hub": {
       "command": "python",
       "args": ["-m", "ai_producer_hub"],
-      "cwd": "D:\\Dev\\repos\\ai-producer-hub"
+      "cwd": "/path/to/ai-producer-hub"
     }
   }
 }
 ```
 
-## Example Sessions
+### Optional Dependencies
 
-### Session 1: MIDI Jam to Full Track
-
-```
-You: "List my MIDI devices"
-AI:  {"inputs": ["MPK mini 3"], "outputs": ["Microsoft GS"]}
-
-You: "Record from device 0 for 30 seconds"
-AI:  [You play a melody on your keyboard]
-AI:  "Recorded 47 events to recording_20251128.mid"
-
-You: "Turn that into a full synthwave track"
-AI:  [Analyzes MIDI, generates prompt, calls Suno]
-AI:  "Generated 'Neon Dreams' - loaded to Deck 1!"
-
-You: "Generate 3 more tracks in similar style, load to decks 2-4"
-AI:  [Generates and loads]
-AI:  "4 tracks ready. Start mixing?"
+For full AI functionality:
+```bash
+pip install ai-producer-hub[ai]
 ```
 
-### Session 2: Live Stream Producer
-
-```
-You: "Start a 2-hour lo-fi stream on Twitch"
-AI:  [Starts OBS, generates initial tracks, begins automix]
-AI:  "Streaming! Generating new tracks every 10 minutes."
-AI:  [2 hours later]
-AI:  "Stream complete. 12 unique AI tracks played. Recording saved."
+For development:
+```bash
+pip install ai-producer-hub[dev]
 ```
 
-### Session 3: Album in an Hour
-
+For documentation:
+```bash
+pip install ai-producer-hub[docs]
 ```
-You: "Make me a 10-track album about space exploration"
-AI:  [Generates track list with variations]
-     Track 1: "Launch Sequence" - epic orchestral intro
-     Track 2: "Zero Gravity" - ambient floating
-     Track 3: "First Contact" - mysterious tension
-     ... etc
-AI:  [Generates all tracks via Suno]
-AI:  [Masters in Reaper]
-AI:  [Adds to Plex library]
-AI:  "Album 'Beyond the Stars' complete. 10 tracks, 42 minutes."
+
+## Usage Examples
+
+### Basic MIDI Workflow
+```python
+# 1. Check available MIDI devices
+list_midi_devices()
+# Returns: {'inputs': ['MPK mini 3'], 'outputs': ['Microsoft GS']}
+
+# 2. Record a performance
+record_midi_performance(device_index=0, duration_seconds=30)
+# Saves MIDI file with timestamp
+
+# 3. Generate AI-powered track
+songgen_to_deck(
+    lyrics="Electronic verse about digital dreams",
+    genre="Electronic",
+    tempo=128,
+    deck=1
+)
+# Produces complete track with vocals and instrumentation
+```
+
+### Autonomous Production
+```python
+# AI-managed complete production pipeline
+result = ai_produce_track(
+    theme="cyberpunk city night",
+    genre="Electronic",
+    bpm=130,
+    voice_type="Female"
+)
+# AI handles all aspects: analysis, generation, mixing, integration
+```
+
+### Large-Scale Projects
+```python
+# Automated album production
+ai_orchestrate_production(
+    "Create a 12-track electronic album about urban exploration",
+    available_tools=["songgen", "reaper", "plex"]
+)
+# AI manages complete album workflow from concept to final product
+```
+
+### Conversational Assistance
+```python
+# Natural language production guidance
+ai_collaborate_workflow(
+    "The mix needs more energy in the drop sections"
+)
+# AI analyzes current state and provides specific recommendations
 ```
 
 ## Architecture
 
 ```
-AI-Producer-Hub
-├── Local Tools
-│   └── MIDI (8 tools) ─── python-rtmidi + mido
+ai-producer-hub/
+├── AI Integration Layer
+│   ├── ai_integration.py      # SEP-1577 sampling + conversational AI
+│   └── Autonomous workflows   # AI-managed production pipelines
 │
-├── Mounted Servers
-│   ├── /dj/*     ─── VirtualDJ-MCP (61 tools)
-│   ├── /plex/*   ─── Plex-MCP (15 tools)
-│   ├── /suno/*   ─── Suno-MCP (AI generation)
-│   ├── /reaper/* ─── Reaper-MCP (DAW)
-│   └── /obs/*    ─── OBS-MCP (streaming)
+├── Local MIDI Tools (8 tools)
+│   ├── Device enumeration     # python-rtmidi + mido
+│   ├── Performance capture    # Live recording and processing
+│   ├── Hardware control       # MIDI I/O and monitoring
+│   └── AI content analysis    # MIDI-to-content conversion
 │
-└── Cross-Server Workflows
-    ├── suno_to_deck()
-    ├── ai_dj_set()
-    ├── midi_to_ai_seed()
-    ├── live_stream_producer()
-    ├── album_factory()
-    └── ... more
+├── Component MCP Servers
+│   ├── /dj/*      - VirtualDJ-MCP (61 tools) - Professional mixing
+│   ├── /plex/*    - Plex-MCP (15 tools) - Media library management
+│   ├── /songgen/* - SongGeneration-MCP (7 tools) - AI vocal/instrumental generation
+│   ├── /reaper/*  - Reaper-MCP (25 tools) - DAW and mastering
+│   └── /obs/*     - OBS-MCP (20 tools) - Live streaming
+│
+└── Cross-Server Orchestration
+    ├── ai_produce_track()     - Autonomous track production
+    ├── ai_orchestrate_production() - SEP-1577 sampling workflows
+    ├── ai_collaborate_workflow() - Conversational AI assistance
+    ├── ai_stream_production() - Automated live streaming
+    └── ai_analyze_production() - AI-powered quality assessment
 ```
 
-## MIDI + AI: The Bridge
+## Development
 
-**MIDI (1983)**: A 41-year-old standard that still connects every piece of music hardware.
+### Requirements
+- Python 3.11+
+- FastMCP 2.14.3+
+- Component MCP servers (see Installation)
 
-**AI (2025)**: Models that can generate music from text descriptions.
+### Development Setup
+```bash
+# Install development dependencies
+uv pip install -e .[dev,ai,docs]
 
-**This Hub**: The bridge between your physical instruments and AI's creative power.
+# Run tests
+pytest tests/ -v --cov=src
 
+# Lint and format
+ruff check . --fix
+ruff format .
+
+# Type checking
+mypy src/
 ```
-Your fingers on keys → MIDI bytes → AI understanding → Full production
-     (1983 tech)      (serial data)   (2025 magic)    (instant result)
-```
 
-Play 4 bars. Get a track. That's the future.
+### Project Structure
+- `src/ai_producer_hub/` - Main package
+- `mcpb/` - MCPB packaging configuration
+- `.zed/` - Zed editor integration
+- `.github/workflows/` - CI/CD pipelines
+- `tests/` - Test suite
 
 ## License
 
 MIT License
 
----
+## Contributing
 
-**Made with 🎹 + 🤖 for musicians who want AI as their co-producer**
+Contributions are welcome. Please see the development documentation for guidelines.
 
-*Your melody. AI's production. Your mix. Infinite possibilities.*
+## Related Projects
+
+- [SongGeneration-MCP](https://github.com/sandraschi/songgeneration-mcp) - AI music generation
+- [VirtualDJ-MCP](https://github.com/sandraschi/virtualdj-mcp) - Professional DJ mixing
+- [Plex-MCP](https://github.com/sandraschi/plex-mcp) - Media library management
 

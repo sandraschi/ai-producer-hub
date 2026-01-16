@@ -1,0 +1,111 @@
+# Pre-commit hooks for AI Producer Hub
+# Ensures code quality and consistency across the project
+
+ci:
+  autofix_commit_msg: "fix: auto fixes from pre-commit hooks"
+  autofix_prs: true
+  autoupdate_branch: "main"
+  autoupdate_commit_msg: "chore: update pre-commit hooks"
+  autoupdate_schedule: "weekly"
+  skip: []
+  submodules: false
+
+repos:
+  # Ruff - Fast Python linter and formatter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # MyPy - Static type checker
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.2
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-all]
+        args: [--ignore-missing-imports, --no-strict-optional]
+
+  # Pre-commit hooks for Python
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: debug-statements
+      - id: check-ast
+
+  # Commit message linting
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.6.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [feat, fix, docs, style, refactor, test, chore, ci, perf]
+
+  # Safety - Check for insecure Python packages
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    rev: v1.3.2
+    hooks:
+      - id: python-safety-dependencies-check
+
+  # Bandit - Security linter for Python
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit
+        args: [-c, pyproject.toml]
+        additional_dependencies: ["bandit[toml]"]
+
+  # Check for merge conflicts and other issues
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-check-blanket-noqa
+      - id: python-check-blanket-type-ignore
+      - id: rst-backticks
+      - id: rst-directive-colons
+      - id: rst-inline-touching-normal
+
+  # Update dependencies
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.17.0
+    hooks:
+      - id: pyupgrade
+        args: [--py311-plus]
+
+# Local hooks for project-specific checks
+  - repo: local
+    hooks:
+      # Run tests
+      - id: pytest
+        name: Run tests
+        entry: python -m pytest tests/ -v
+        language: system
+        pass_filenames: false
+        stages: [push]
+
+      # Check MCP standards compliance
+      - id: mcp-standards
+        name: Check MCP standards
+        entry: python scripts/check-repo-standards.ps1
+        language: system
+        pass_filenames: false
+        stages: [commit]
+
+      # Validate manifest.json
+      - id: validate-manifest
+        name: Validate manifest.json
+        entry: python -c "import json; json.load(open('manifest.json'))"
+        language: system
+        pass_filenames: false
+        stages: [commit]
