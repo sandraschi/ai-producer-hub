@@ -197,26 +197,55 @@ Quality monitoring: Active with automatic adjustments
 Stream is now live! I'll continue generating fresh content throughout."
 ```
 
-## Installation
+## 🚀 Installation
 
+### Prerequisites
+- [uv](https://docs.astral.sh/uv/) installed (RECOMMENDED)
+- Python 3.12+
+
+### 📦 Quick Start
+Run immediately via `uvx`:
+```bash
+uvx ai-producer-hub
+```
+
+### 🎯 Claude Desktop Integration
+Add to your `claude_desktop_config.json`:
+```json
+"mcpServers": {
+  "ai-producer-hub": {
+    "command": "uv",
+    "args": ["--directory", "D:/Dev/repos/ai-producer-hub", "run", "ai-producer-hub"]
+  }
+}
+```
 ### Requirements
 - Python 3.11 or later
 - MIDI hardware (optional, for hardware integration)
 - Component MCP servers (VirtualDJ, Plex, SongGeneration, Reaper, OBS)
 
-### Basic Installation
+## 🚀 Installation
+
+### Prerequisites
+- [uv](https://docs.astral.sh/uv/) installed (RECOMMENDED)
+- Python 3.12+
+
+### 📦 Quick Start
+Run immediately via `uvx`:
 ```bash
-# Clone repository
-git clone https://github.com/sandraschi/ai-producer-hub.git
-cd ai-producer-hub
-
-# Install with uv (recommended)
-uv pip install -e .[dev,ai]
-
-# Or with pip
-pip install -e .[dev,ai]
+uvx ai-producer-hub
 ```
 
+### 🎯 Claude Desktop Integration
+Add to your `claude_desktop_config.json`:
+```json
+"mcpServers": {
+  "ai-producer-hub": {
+    "command": "uv",
+    "args": ["--directory", "D:/Dev/repos/ai-producer-hub", "run", "ai-producer-hub"]
+  }
+}
+```
 ### Component Servers
 Install the required MCP server components:
 

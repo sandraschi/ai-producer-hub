@@ -1,0 +1,18 @@
+# ai-producer-hub
+> A Model Context Protocol server that integrates AI-powered music generation with professional production tools, enabling autonomous music creation workflows from MIDI input to live streaming. The AI P...
+
+This project includes automated llms.txt generation for AI accessibility.
+
+## Docs
+- [Readme](README.md): A Model Context Protocol server that integrates AI-powered music generation with professional produc...
+- [Massive Ai Modernization](MASSIVE_AI_MODERNIZATION.md): The ai-producer-hub has been completely modernized from a basic MCP server to a **massive AI integra...
+- [Changelog](CHANGELOG.md): All notable changes to this project will be documented in this file.
+- [Assessment](ASSESSMENT.md): **Category**: Other Project
+
+## Configuration
+- [Pyproject](pyproject.toml): Python project configuration and dependencies
+- [Config](.git\config): Application configuration files
+
+## Optional
+- [Changelog](CHANGELOG.md): Project changelog information
+- [License](LICENSE): Project license information

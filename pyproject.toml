@@ -43,7 +43,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "fastmcp>=2.14.3,<3.0.0",
+    "fastmcp>=3.1.0,<4",
     "aiohttp>=3.9.0",
     "aiofiles>=23.2.0",
     "pydantic>=2.0.0",
@@ -96,12 +96,11 @@ Changelog = "https://github.com/sandraschi/ai-producer-hub/blob/main/CHANGELOG.m
 "Source Code" = "https://github.com/sandraschi/ai-producer-hub"
 PyPI = "https://pypi.org/project/ai-producer-hub/"
 
-[tool.setuptools.packages.find]
-where = ["src"]
-
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+[tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "C90", "UP", "B", "A"]
 ignore = ["E501", "B008", "C901"]
 
