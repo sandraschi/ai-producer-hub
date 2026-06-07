@@ -1,6 +1,12 @@
+﻿set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+
 # SOTA Fleet-Standard Justfile
 
 set shell := ["powershell", "-c"]
+
+# Open the interactive recipe dashboard in the browser
+default:
+    @just --list
 
 # --- 🚀 Operations ---
 
@@ -33,3 +39,4 @@ test:
 clean:
     @Remove-Item -Recurse -Force .venv, .pytest_cache, .ruff_cache -ErrorAction SilentlyContinue
     @Get-ChildItem -Recurse -Filter "__pycache__" | Remove-Item -Recurse -Force
+
