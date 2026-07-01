@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #09090b;
+  color: #e4e4e7;
+  color-scheme: dark;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+select, input, textarea {
+  color-scheme: dark;
+}
