@@ -1,0 +1,36 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "maintainers": ["sandraschi"],
+  "name": "ai-producer-hub",
+  "description": "AI Music Producer - Generate, Mix, Master, Stream. Bridges AI music generation with VirtualDJ, Plex, Reaper, OBS, and MIDI hardware.",
+  "type": "mcp_server",
+  "status": "beta",
+  "framework": "FastMCP 3.2+",
+  "tools": 1,
+  "transport": ["stdio"],
+  "keywords": [
+    "music",
+    "production",
+    "virtualdj",
+    "reaper",
+    "obs",
+    "plex",
+    "midi",
+    "ai",
+    "streaming"
+  ],
+  "features": {
+    "music_generation": {
+      "enabled": true,
+      "capabilities": ["generate", "mix", "master"]
+    },
+    "hardware_integration": {
+      "enabled": true,
+      "devices": ["midi"]
+    },
+    "broadcast": {
+      "enabled": true,
+      "platforms": ["virtualdj", "obs"]
+    }
+  }
+}
