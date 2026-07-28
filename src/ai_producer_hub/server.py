@@ -14,14 +14,11 @@ NO HUMAN CAN:
 AI CAN. This is that server.
 """
 
-import asyncio
 import sys
-from pathlib import Path
-from datetime import datetime
-from typing import Optional, Dict, Any, List
-from rich.console import Console
 
 from fastmcp import FastMCP
+from rich.console import Console
+
 from .ai_integration import AIProducerAgent
 
 console = Console(file=sys.stderr)
@@ -65,7 +62,7 @@ mcp = FastMCP(
 
     🎵 The AI can generate, mix, master, and stream music faster than any human!
     🎯 Ask me to "produce a track about [theme]" and I'll handle everything autonomously!
-    """
+    """,
 )
 
 
@@ -80,6 +77,7 @@ def register_local_tools():
     """Register AI Producer Hub's own tools."""
     try:
         from .tools.midi import setup_midi_tools
+
         setup_midi_tools(mcp)
         console.print("[green]Registered MIDI tools (8 tools)[/green]")
     except Exception as e:
@@ -89,46 +87,53 @@ def register_local_tools():
 def mount_servers():
     """Mount all available MCP servers."""
     global MOUNTED_SERVERS
-    
+
     # VirtualDJ-MCP
     try:
         from virtualdj_mcp.server import mcp as vdj_mcp
+
         mcp.mount("/dj", vdj_mcp)
         MOUNTED_SERVERS["virtualdj"] = {"mount": "/dj", "tools": 61}
         console.print("[green]Mounted VirtualDJ-MCP at /dj/* (61 tools)[/green]")
     except ImportError as e:
         console.print(f"[yellow]VirtualDJ-MCP not available: {e}[/yellow]")
-    
+
     # Plex-MCP
     try:
         from plex_mcp.app import mcp as plex_mcp
+
         mcp.mount("/plex", plex_mcp)
         MOUNTED_SERVERS["plex"] = {"mount": "/plex", "tools": 15}
         console.print("[green]Mounted Plex-MCP at /plex/* (15 tools)[/green]")
     except ImportError as e:
         console.print(f"[yellow]Plex-MCP not available: {e}[/yellow]")
-    
+
     # SongGeneration-MCP (LeVo AI Model)
     try:
         from songgeneration_mcp.mcp_server import app as songgen_mcp
+
         mcp.mount("/songgen", songgen_mcp)
         MOUNTED_SERVERS["songgeneration"] = {"mount": "/songgen", "tools": 7}
-        console.print("[green]Mounted SongGeneration-MCP at /songgen/* (LeVo AI generation)[/green]")
+        console.print(
+            "[green]Mounted SongGeneration-MCP at /songgen/* (LeVo AI generation)[/green]"
+        )
     except ImportError as e:
         console.print(f"[yellow]SongGeneration-MCP not available: {e}[/yellow]")
-    
+
     # Reaper-MCP
     try:
         from reaper_mcp.server import mcp as reaper_mcp
+
         mcp.mount("/reaper", reaper_mcp)
         MOUNTED_SERVERS["reaper"] = {"mount": "/reaper", "tools": "?"}
         console.print("[green]Mounted Reaper-MCP at /reaper/* (DAW)[/green]")
     except ImportError as e:
         console.print(f"[yellow]Reaper-MCP not available: {e}[/yellow]")
-    
+
     # OBS-MCP
     try:
         from obsmcp.server import mcp as obs_mcp
+
         mcp.mount("/obs", obs_mcp)
         MOUNTED_SERVERS["obs"] = {"mount": "/obs", "tools": "?"}
         console.print("[green]Mounted OBS-MCP at /obs/* (streaming)[/green]")
@@ -140,6 +145,7 @@ def mount_servers():
 # AI GENERATION -> DJ WORKFLOWS
 # ============================================================================
 
+
 @mcp.tool()
 async def songgen_to_deck(
     lyrics: str,
@@ -148,7 +154,7 @@ async def songgen_to_deck(
     tempo: int = 128,
     voice: str = "Male",
     deck_id: int = 1,
-    separate_stems: bool = False
+    separate_stems: bool = False,
 ) -> dict:
     """
     Generate an AI track using LeVo model and load it to VirtualDJ.
@@ -194,7 +200,7 @@ async def songgen_to_deck(
             "deck": deck_id,
             "separate_stems": separate_stems,
             "status": "generation_started",
-            "message": "LeVo AI generation started - high-quality vocals + professional production!"
+            "message": "LeVo AI generation started - high-quality vocals + professional production!",
         }
 
         # SongGeneration workflow:
@@ -214,11 +220,11 @@ async def ai_dj_set(
     theme: str,
     num_tracks: int = 6,
     duration_minutes: int = 30,
-    bpm_range: tuple[int, int] = (120, 130)
+    bpm_range: tuple[int, int] = (120, 130),
 ) -> dict:
     """
     Generate a complete AI DJ set from a theme.
-    
+
     This workflow:
     1. Generates multiple tracks based on theme variations
     2. Analyzes BPM and key of each
@@ -226,23 +232,23 @@ async def ai_dj_set(
     4. Loads to VirtualDJ decks
     5. Configures automix
     6. Optionally starts recording
-    
+
     Args:
         theme: Overall theme for the set
                Example: "progressive house summer festival"
         num_tracks: Number of tracks to generate (2-8)
         duration_minutes: Target set duration
         bpm_range: BPM range for generated tracks
-    
+
     Returns:
         Dict with generated tracks and automix status
-    
+
     Example:
         ai_dj_set("dark techno warehouse rave", num_tracks=6, duration_minutes=45)
     """
     try:
         track_duration = (duration_minutes * 60) // num_tracks
-        
+
         # Generate prompts with variations
         prompts = [
             f"{theme} - intro buildup",
@@ -250,9 +256,9 @@ async def ai_dj_set(
             f"{theme} - breakdown emotional",
             f"{theme} - peak time banger",
             f"{theme} - driving rhythm",
-            f"{theme} - outro wind down"
+            f"{theme} - outro wind down",
         ][:num_tracks]
-        
+
         result = {
             "workflow": "ai_dj_set",
             "theme": theme,
@@ -267,41 +273,37 @@ async def ai_dj_set(
                 "Load to VDJ decks 1-8",
                 "Configure automix transitions",
                 "Start recording",
-                "Let it play!"
-            ]
+                "Let it play!",
+            ],
         }
-        
+
         return result
-        
+
     except Exception as e:
         return {"success": False, "error": str(e)}
 
 
 @mcp.tool()
-async def remix_plex_track(
-    plex_search: str,
-    remix_style: str,
-    deck_id: int = 1
-) -> dict:
+async def remix_plex_track(plex_search: str, remix_style: str, deck_id: int = 1) -> dict:
     """
     Take a track from Plex library and create an AI remix.
-    
+
     Workflow:
     1. Search Plex for the track
     2. Extract stems (vocals, instruments, bass, drums)
     3. Send stems + style to Suno for reimagining
     4. Generate new remix
     5. Load to VirtualDJ deck
-    
+
     Args:
         plex_search: Search query for Plex library
         remix_style: Style for the remix
                     Example: "drum and bass", "lo-fi", "orchestral"
         deck_id: Deck to load remix to
-    
+
     Returns:
         Dict with remix generation status
-    
+
     Example:
         remix_plex_track("Daft Punk Around the World", "lo-fi chill", deck=2)
     """
@@ -316,49 +318,49 @@ async def remix_plex_track(
                 "2. Load original to VDJ for stem extraction",
                 "3. Extract stems using VDJ stem separation",
                 f"4. Generate remix in style: {remix_style}",
-                f"5. Load remix to Deck {deck_id}"
+                f"5. Load remix to Deck {deck_id}",
             ],
-            "status": "framework_ready"
+            "status": "framework_ready",
         }
-        
+
         return result
-        
+
     except Exception as e:
         return {"success": False, "error": str(e)}
 
 
 @mcp.tool()
 async def bpm_bridge_generator(
-    current_bpm: int,
-    target_bpm: int,
-    style: str = "electronic"
+    current_bpm: int, target_bpm: int, style: str = "electronic"
 ) -> dict:
     """
     Generate a transition track that bridges between two BPMs.
-    
+
     Perfect for smooth genre transitions in a DJ set.
     Generates a track that starts at one BPM and gradually
     transitions to another.
-    
+
     Args:
         current_bpm: Starting BPM
         target_bpm: Ending BPM
         style: Musical style for the bridge
-    
+
     Returns:
         Dict with bridge track info
-    
+
     Example:
         bpm_bridge_generator(128, 140, style="tech house to techno")
     """
     try:
         direction = "up" if target_bpm > current_bpm else "down"
         diff = abs(target_bpm - current_bpm)
-        
-        prompt = f"{style} transition track, starts at {current_bpm}bpm, " \
-                 f"gradually builds {direction} to {target_bpm}bpm, " \
-                 f"smooth tempo transition over 2 minutes"
-        
+
+        prompt = (
+            f"{style} transition track, starts at {current_bpm}bpm, "
+            f"gradually builds {direction} to {target_bpm}bpm, "
+            f"smooth tempo transition over 2 minutes"
+        )
+
         result = {
             "workflow": "bpm_bridge",
             "from_bpm": current_bpm,
@@ -366,11 +368,11 @@ async def bpm_bridge_generator(
             "direction": direction,
             "bpm_change": diff,
             "generated_prompt": prompt,
-            "status": "framework_ready"
+            "status": "framework_ready",
         }
-        
+
         return result
-        
+
     except Exception as e:
         return {"success": False, "error": str(e)}
 
@@ -379,16 +381,17 @@ async def bpm_bridge_generator(
 # LIVE STREAMING WORKFLOWS
 # ============================================================================
 
+
 @mcp.tool()
 async def live_stream_producer(
     theme: str,
     duration_hours: float = 1.0,
     platform: str = "twitch",
-    generate_interval_minutes: int = 10
+    generate_interval_minutes: int = 10,
 ) -> dict:
     """
     Run a live streaming DJ set with AI-generated music.
-    
+
     The ultimate AI producer workflow:
     1. Start OBS streaming
     2. Generate initial tracks
@@ -396,22 +399,22 @@ async def live_stream_producer(
     4. Continuously generate new tracks
     5. Hot-swap new tracks into the mix
     6. Run for specified duration
-    
+
     Args:
         theme: Theme for generated music
         duration_hours: Stream duration
         platform: Streaming platform (twitch, youtube, etc.)
         generate_interval_minutes: How often to generate new tracks
-    
+
     Returns:
         Dict with streaming session info
-    
+
     Example:
         live_stream_producer("synthwave retro gaming", duration_hours=2)
     """
     try:
         num_generations = int((duration_hours * 60) / generate_interval_minutes)
-        
+
         result = {
             "workflow": "live_stream_producer",
             "theme": theme,
@@ -426,13 +429,13 @@ async def live_stream_producer(
                 f"5. Every {generate_interval_minutes} min: generate new track",
                 "6. Hot-swap into next available deck",
                 "7. Continue until duration reached",
-                "8. Graceful outro and stream end"
+                "8. Graceful outro and stream end",
             ],
-            "status": "framework_ready"
+            "status": "framework_ready",
         }
-        
+
         return result
-        
+
     except Exception as e:
         return {"success": False, "error": str(e)}
 
@@ -441,39 +444,37 @@ async def live_stream_producer(
 # ALBUM/BATCH PRODUCTION
 # ============================================================================
 
+
 @mcp.tool()
 async def album_factory(
-    album_theme: str,
-    num_tracks: int = 10,
-    album_title: str = "",
-    save_to_plex: bool = True
+    album_theme: str, num_tracks: int = 10, album_title: str = "", save_to_plex: bool = True
 ) -> dict:
     """
     Generate a complete album from a theme.
-    
+
     This workflow:
     1. Creates track list with variations on theme
     2. Generates all tracks via Suno
     3. Masters each track
     4. Creates album metadata
     5. Saves to Plex library
-    
+
     Args:
         album_theme: Overall album concept
         num_tracks: Number of tracks (5-20)
         album_title: Optional album title (auto-generated if empty)
         save_to_plex: Whether to add to Plex library
-    
+
     Returns:
         Dict with album generation plan
-    
+
     Example:
         album_factory("cyberpunk noir detective story", num_tracks=12)
     """
     try:
         if not album_title:
             album_title = f"AI Album - {album_theme[:30]}"
-        
+
         # Generate diverse track concepts
         track_concepts = [
             "opening ambient intro",
@@ -485,14 +486,14 @@ async def album_factory(
             "experimental breakdown",
             "vocal feature",
             "climactic moment",
-            "reflective outro"
+            "reflective outro",
         ][:num_tracks]
-        
+
         tracks = [
-            {"number": i+1, "concept": f"{album_theme} - {concept}"}
+            {"number": i + 1, "concept": f"{album_theme} - {concept}"}
             for i, concept in enumerate(track_concepts)
         ]
-        
+
         result = {
             "workflow": "album_factory",
             "album_title": album_title,
@@ -505,41 +506,37 @@ async def album_factory(
                 "3. Apply consistent mastering",
                 "4. Generate album artwork",
                 "5. Create metadata (tags, etc.)",
-                "6. Save to Plex library" if save_to_plex else "6. Save locally"
+                "6. Save to Plex library" if save_to_plex else "6. Save locally",
             ],
             "estimated_time": f"{num_tracks * 2} minutes",
-            "status": "framework_ready"
+            "status": "framework_ready",
         }
-        
+
         return result
-        
+
     except Exception as e:
         return {"success": False, "error": str(e)}
 
 
 @mcp.tool()
-async def karaoke_generator(
-    lyrics: str,
-    style: str = "pop ballad",
-    deck_id: int = 1
-) -> dict:
+async def karaoke_generator(lyrics: str, style: str = "pop ballad", deck_id: int = 1) -> dict:
     """
     Generate a karaoke track from lyrics.
-    
+
     Workflow:
     1. Send lyrics to Suno with style
     2. Generate full song
     3. Load to VirtualDJ
     4. Enable karaoke mode (removes vocals, shows lyrics)
-    
+
     Args:
         lyrics: Song lyrics (or theme for AI lyrics)
         style: Musical style
         deck_id: Deck to load to
-    
+
     Returns:
         Dict with karaoke generation status
-    
+
     Example:
         karaoke_generator(
             "Verse about coding all night\\nChorus about AI dreams",
@@ -558,13 +555,13 @@ async def karaoke_generator(
                 f"3. Load to VDJ Deck {deck_id}",
                 "4. Enable VDJ karaoke mode",
                 "5. Remove vocals (stem separation)",
-                "6. Ready for karaoke!"
+                "6. Ready for karaoke!",
             ],
-            "status": "framework_ready"
+            "status": "framework_ready",
         }
-        
+
         return result
-        
+
     except Exception as e:
         return {"success": False, "error": str(e)}
 
@@ -573,32 +570,31 @@ async def karaoke_generator(
 # MASHUP/REMIX TOOLS
 # ============================================================================
 
+
 @mcp.tool()
 async def ai_mashup(
-    track_a_search: str,
-    track_b_search: str,
-    mashup_style: str = "seamless blend"
+    track_a_search: str, track_b_search: str, mashup_style: str = "seamless blend"
 ) -> dict:
     """
     Create an AI-powered mashup of two tracks.
-    
+
     Workflow:
     1. Find tracks in Plex library
     2. Extract stems from both
     3. Analyze compatible elements
     4. Generate mashup arrangement
     5. Load to VirtualDJ for preview
-    
+
     Args:
         track_a_search: Search query for first track
         track_b_search: Search query for second track
         mashup_style: How to blend them
                      "seamless blend", "vocals swap", "rhythm swap",
                      "creative chaos"
-    
+
     Returns:
         Dict with mashup plan
-    
+
     Example:
         ai_mashup("Queen Bohemian Rhapsody", "Bee Gees Stayin Alive", "vocals swap")
     """
@@ -615,13 +611,13 @@ async def ai_mashup(
                 "4. Analyze BPM, key compatibility",
                 f"5. Create mashup arrangement ({mashup_style})",
                 "6. Use VDJ stems to perform mashup live",
-                "7. Record result"
+                "7. Record result",
             ],
-            "status": "framework_ready"
+            "status": "framework_ready",
         }
-        
+
         return result
-        
+
     except Exception as e:
         return {"success": False, "error": str(e)}
 
@@ -629,6 +625,7 @@ async def ai_mashup(
 # ============================================================================
 # STATUS AND HELP
 # ============================================================================
+
 
 @mcp.tool()
 async def hub_status() -> dict:
@@ -644,24 +641,18 @@ async def hub_status() -> dict:
                 "songgen_to_deck",
                 "ai_dj_set",
                 "karaoke_generator",
-                "bpm_bridge_generator"
+                "bpm_bridge_generator",
             ],
-            "remixing": [
-                "remix_plex_track",
-                "ai_mashup"
-            ],
-            "production": [
-                "album_factory",
-                "live_stream_producer"
-            ]
+            "remixing": ["remix_plex_track", "ai_mashup"],
+            "production": ["album_factory", "live_stream_producer"],
         },
         "capabilities": {
             "ai_generation": "songgeneration" in MOUNTED_SERVERS,
             "dj_mixing": "virtualdj" in MOUNTED_SERVERS,
             "media_library": "plex" in MOUNTED_SERVERS,
             "daw_mastering": "reaper" in MOUNTED_SERVERS,
-            "live_streaming": "obs" in MOUNTED_SERVERS
-        }
+            "live_streaming": "obs" in MOUNTED_SERVERS,
+        },
     }
 
 
@@ -669,7 +660,7 @@ async def hub_status() -> dict:
 async def producer_help(topic: str = "overview") -> str:
     """
     Get help for AI Producer Hub workflows.
-    
+
     Args:
         topic: Help topic (overview, generation, mixing, streaming, examples)
     """
@@ -715,7 +706,6 @@ NO HUMAN CAN:
 
 AI CAN. This hub makes it happen.
 """,
-        
         "generation": """
 # AI Generation Workflows
 
@@ -748,7 +738,6 @@ Create transition tracks between tempos.
 bpm_bridge_generator(128, 140, style="house to techno")
 ```
 """,
-
         "examples": """
 # Example Sessions
 
@@ -793,9 +782,9 @@ ai_mashup(
     mashup_style="rhythm swap"
 )
 ```
-"""
+""",
     }
-    
+
     return help_texts.get(topic, help_texts["overview"])
 
 
@@ -803,9 +792,10 @@ ai_mashup(
 # SERVER ENTRY POINT
 # ============================================================================
 
+
 def main():
     """Main entry point for AI Producer Hub."""
-    console.print(f"""
+    console.print("""
 [bold magenta]
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
@@ -833,7 +823,9 @@ def main():
     mount_servers()
 
     console.print(f"\n[green]Mounted {len(MOUNTED_SERVERS)} servers + AI orchestration[/green]")
-    console.print("[bold cyan]🎵 Massive AI integration active - autonomous production ready![/bold cyan]\n")
+    console.print(
+        "[bold cyan]🎵 Massive AI integration active - autonomous production ready![/bold cyan]\n"
+    )
 
     try:
         mcp.run(transport="stdio")
@@ -846,4 +838,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -7,20 +7,20 @@ enabling the AI to autonomously orchestrate complex music production workflows.
 
 import asyncio
 import logging
-from typing import Dict, Any, List, Optional, Union
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
-from fastmcp import FastMCP
 import openai
-import anthropic
 from anthropic import Anthropic
+from fastmcp import FastMCP
 
 logger = logging.getLogger(__name__)
 
 
 class ProductionStage(Enum):
     """Stages of music production workflow."""
+
     ANALYSIS = "analysis"
     LYRICS_GENERATION = "lyrics_generation"
     MELODY_EXTRACTION = "melody_extraction"
@@ -34,6 +34,7 @@ class ProductionStage(Enum):
 @dataclass
 class ProductionContext:
     """Context for AI-driven production workflows."""
+
     theme: str
     genre: str
     bpm: int
@@ -41,11 +42,11 @@ class ProductionContext:
     voice_type: str
     complexity: str
     current_stage: ProductionStage
-    midi_input: Optional[str] = None
-    generated_lyrics: Optional[str] = None
-    generated_melody: Optional[str] = None
-    stems_generated: List[str] = None
-    final_mix: Optional[str] = None
+    midi_input: str | None = None
+    generated_lyrics: str | None = None
+    generated_melody: str | None = None
+    stems_generated: list[str] = None
+    final_mix: str | None = None
 
     def __post_init__(self):
         if self.stems_generated is None:
@@ -63,11 +64,11 @@ class AIProducerAgent:
     - Real-time collaboration between AI models and production tools
     """
 
-    def __init__(self, anthropic_api_key: Optional[str] = None, openai_api_key: Optional[str] = None):
+    def __init__(self, anthropic_api_key: str | None = None, openai_api_key: str | None = None):
         self.anthropic_client = Anthropic(api_key=anthropic_api_key) if anthropic_api_key else None
         self.openai_client = openai.AsyncOpenAI(api_key=openai_api_key) if openai_api_key else None
-        self.active_productions: Dict[str, ProductionContext] = {}
-        self.mcp_server: Optional[FastMCP] = None
+        self.active_productions: dict[str, ProductionContext] = {}
+        self.mcp_server: FastMCP | None = None
 
     def register_with_mcp(self, mcp_server: FastMCP):
         """Register AI agent capabilities with the MCP server."""
@@ -87,9 +88,9 @@ class AIProducerAgent:
         bpm: int = 128,
         duration_seconds: int = 180,
         voice_type: str = "Male",
-        midi_input: Optional[str] = None,
-        complexity: str = "professional"
-    ) -> Dict[str, Any]:
+        midi_input: str | None = None,
+        complexity: str = "professional",
+    ) -> dict[str, Any]:
         """
         AI-driven complete track production with sampling capabilities.
 
@@ -118,7 +119,7 @@ class AIProducerAgent:
             voice_type=voice_type,
             complexity=complexity,
             current_stage=ProductionStage.ANALYSIS,
-            midi_input=midi_input
+            midi_input=midi_input,
         )
 
         self.active_productions[production_id] = context
@@ -138,17 +139,15 @@ class AIProducerAgent:
                 "🔊 Mixing and balancing",
                 "✨ Mastering for professional sound",
                 "🎛️ Loading to VirtualDJ deck",
-                "📺 Setting up streaming (optional)"
+                "📺 Setting up streaming (optional)",
             ],
             "estimated_duration": "~3-5 minutes",
-            "conversation_followup": "I'll keep you updated on progress. You can ask me about the current stage or make adjustments anytime."
+            "conversation_followup": "I'll keep you updated on progress. You can ask me about the current stage or make adjustments anytime.",
         }
 
     async def ai_orchestrate_production(
-        self,
-        workflow_description: str,
-        available_tools: List[str]
-    ) -> Dict[str, Any]:
+        self, workflow_description: str, available_tools: list[str]
+    ) -> dict[str, Any]:
         """
         SEP-1577 Sampling Implementation: AI autonomously decides tool usage and sequencing.
 
@@ -171,7 +170,7 @@ class AIProducerAgent:
 
         WORKFLOW REQUEST: {workflow_description}
 
-        AVAILABLE TOOLS: {', '.join(available_tools)}
+        AVAILABLE TOOLS: {", ".join(available_tools)}
 
         Your task is to:
         1. Analyze the request and break it down into executable steps
@@ -186,7 +185,7 @@ class AIProducerAgent:
             response = await self.anthropic_client.messages.create(
                 model="claude-3-5-sonnet-20241022",
                 max_tokens=4000,
-                messages=[{"role": "user", "content": planning_prompt}]
+                messages=[{"role": "user", "content": planning_prompt}],
             )
 
             # Parse and execute the autonomous workflow
@@ -198,7 +197,7 @@ class AIProducerAgent:
                 "ai_generated_plan": plan,
                 "execution_status": "completed",
                 "tools_used": available_tools,
-                "conversation_context": "I've autonomously executed this workflow. Would you like me to modify the results or start a new production?"
+                "conversation_context": "I've autonomously executed this workflow. Would you like me to modify the results or start a new production?",
             }
 
         except Exception as e:
@@ -206,10 +205,8 @@ class AIProducerAgent:
             return {"error": f"AI orchestration failed: {str(e)}"}
 
     async def ai_colaborate_workflow(
-        self,
-        user_input: str,
-        conversation_history: List[Dict[str, str]] = None
-    ) -> Dict[str, Any]:
+        self, user_input: str, conversation_history: list[dict[str, str]] = None
+    ) -> dict[str, Any]:
         """
         Conversational tool returns for natural AI collaboration.
 
@@ -226,7 +223,9 @@ class AIProducerAgent:
         if conversation_history is None:
             conversation_history = []
 
-        context = "\n".join([f"{turn['role']}: {turn['content']}" for turn in conversation_history[-5:]])
+        context = "\n".join(
+            [f"{turn['role']}: {turn['content']}" for turn in conversation_history[-5:]]
+        )
 
         prompt = f"""
         You are an expert music producer AI collaborator. Help the user with their music production needs.
@@ -250,31 +249,31 @@ class AIProducerAgent:
             response = await self.anthropic_client.messages.create(
                 model="claude-3-5-sonnet-20241022",
                 max_tokens=1000,
-                messages=[{"role": "user", "content": prompt}]
+                messages=[{"role": "user", "content": prompt}],
             )
 
-            ai_response = response.content[0].text if response.content else "I didn't understand that."
+            ai_response = (
+                response.content[0].text if response.content else "I didn't understand that."
+            )
 
             return {
                 "response_type": "conversational",
                 "ai_response": ai_response,
                 "active_productions": len(self.active_productions),
                 "suggested_next_steps": self._generate_next_steps(user_input),
-                "conversation_continued": True
+                "conversation_continued": True,
             }
 
         except Exception as e:
             return {
                 "response_type": "error",
                 "message": f"AI collaboration error: {str(e)}",
-                "fallback_response": "I'm having trouble connecting to my AI brain right now, but I can still help with basic production tasks!"
+                "fallback_response": "I'm having trouble connecting to my AI brain right now, but I can still help with basic production tasks!",
             }
 
     async def ai_analyze_production(
-        self,
-        production_id: str,
-        analysis_type: str = "comprehensive"
-    ) -> Dict[str, Any]:
+        self, production_id: str, analysis_type: str = "comprehensive"
+    ) -> dict[str, Any]:
         """
         AI-powered analysis of production progress and quality.
 
@@ -312,7 +311,7 @@ class AIProducerAgent:
             response = await self.anthropic_client.messages.create(
                 model="claude-3-5-sonnet-20241022",
                 max_tokens=1500,
-                messages=[{"role": "user", "content": analysis_prompt}]
+                messages=[{"role": "user", "content": analysis_prompt}],
             )
 
             analysis = response.content[0].text if response.content else "Analysis unavailable"
@@ -323,18 +322,15 @@ class AIProducerAgent:
                 "ai_analysis": analysis,
                 "current_stage": context.current_stage.value,
                 "completion_percentage": self._calculate_completion(context),
-                "recommendations": self._extract_recommendations(analysis)
+                "recommendations": self._extract_recommendations(analysis),
             }
 
         except Exception as e:
             return {"error": f"Analysis failed: {str(e)}"}
 
     async def ai_stream_production(
-        self,
-        theme: str,
-        duration_hours: float = 2.0,
-        platform: str = "twitch"
-    ) -> Dict[str, Any]:
+        self, theme: str, duration_hours: float = 2.0, platform: str = "twitch"
+    ) -> dict[str, Any]:
         """
         Autonomous live streaming production with AI-generated content.
 
@@ -350,7 +346,7 @@ class AIProducerAgent:
 
         # Calculate production needs
         tracks_needed = int(duration_hours * 2)  # 2 tracks per hour
-        total_duration = int(duration_hours * 3600)
+        int(duration_hours * 3600)
 
         streaming_plan = {
             "session_id": session_id,
@@ -365,11 +361,11 @@ class AIProducerAgent:
                 "🤖 Start autonomous mixing with AI-generated transitions",
                 "📊 Monitor engagement and adjust energy levels",
                 "🔄 Generate new tracks every 15-20 minutes",
-                "🎯 Maintain consistent quality and theme throughout"
+                "🎯 Maintain consistent quality and theme throughout",
             ],
             "estimated_preparation": "~10 minutes",
             "ai_automation_level": "full_autonomous",
-            "quality_guarantee": "Professional streaming production"
+            "quality_guarantee": "Professional streaming production",
         }
 
         # Start autonomous streaming preparation
@@ -379,7 +375,7 @@ class AIProducerAgent:
             "streaming_session": streaming_plan,
             "status": "preparing",
             "conversation_followup": f"I'll prepare a {duration_hours}-hour {theme} stream for {platform}. You'll get updates as I generate tracks and set up the automation. Ready to go live?",
-            "manual_override_available": True
+            "manual_override_available": True,
         }
 
     async def _run_production_pipeline(self, production_id: str):
@@ -392,7 +388,7 @@ class AIProducerAgent:
             (ProductionStage.STEM_GENERATION, self._generate_stems),
             (ProductionStage.MIXING, self._mix_stems),
             (ProductionStage.MASTERING, self._master_track),
-            (ProductionStage.DJ_INTEGRATION, self._integrate_dj)
+            (ProductionStage.DJ_INTEGRATION, self._integrate_dj),
         ]
 
         for stage, stage_func in stages:
@@ -409,7 +405,7 @@ class AIProducerAgent:
         if not self.anthropic_client:
             return
 
-        prompt = f"Write professional song lyrics for: {context.theme}, genre: {context.genre}, {context.duration_seconds//60} minute track"
+        f"Write professional song lyrics for: {context.theme}, genre: {context.genre}, {context.duration_seconds // 60} minute track"
         # Implementation would call Claude API
         context.generated_lyrics = f"[AI Generated Lyrics for {context.theme}]"
 
@@ -439,18 +435,18 @@ class AIProducerAgent:
         # VirtualDJ integration
         pass
 
-    async def _prepare_streaming_session(self, session_id: str, plan: Dict[str, Any]):
+    async def _prepare_streaming_session(self, session_id: str, plan: dict[str, Any]):
         """Prepare autonomous streaming session."""
         # Implementation for streaming preparation
         pass
 
-    def _generate_next_steps(self, user_input: str) -> List[str]:
+    def _generate_next_steps(self, user_input: str) -> list[str]:
         """Generate contextual next steps based on user input."""
         return [
             "Check current production status",
             "Start a new track production",
             "Analyze existing tracks",
-            "Set up streaming session"
+            "Set up streaming session",
         ]
 
     def _calculate_completion(self, context: ProductionContext) -> int:
@@ -462,11 +458,11 @@ class AIProducerAgent:
             ProductionStage.STEM_GENERATION: 60,
             ProductionStage.MIXING: 80,
             ProductionStage.MASTERING: 90,
-            ProductionStage.DJ_INTEGRATION: 100
+            ProductionStage.DJ_INTEGRATION: 100,
         }
         return stage_weights.get(context.current_stage, 0)
 
-    def _extract_recommendations(self, analysis: str) -> List[str]:
+    def _extract_recommendations(self, analysis: str) -> list[str]:
         """Extract actionable recommendations from AI analysis."""
         # Simple extraction - could be more sophisticated
         return ["Review current mix", "Adjust EQ settings", "Add creative effects"]
