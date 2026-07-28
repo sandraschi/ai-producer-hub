@@ -1,0 +1,5 @@
+_dashboard/
+
+__pycache__/
+*.py[cod]
+
