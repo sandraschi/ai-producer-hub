@@ -1,24 +1,12 @@
 name: CI
+
 on:
   push:
     branches: [main, master]
   pull_request:
     branches: [main, master]
   workflow_dispatch:
+
 jobs:
-  check:
-    name: Lint and Test (Windows)
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
-        with:
-          version: latest
-          enable-cache: true
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: uv sync --extra dev --extra ai
-      - run: uv run ruff check src tests
-      - run: uv run ruff format --check src tests
-      - run: uv run pytest tests/ -q --tb=short --no-cov
+  ci:
+    uses: sandraschi/fleet-ci/.github/workflows/hybrid.yml@v1
