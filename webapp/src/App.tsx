@@ -3,6 +3,7 @@ import AppLayout from './components/layout/app-layout'
 import Dashboard from './pages/dashboard'
 import Tools from './pages/tools'
 import Midi from './pages/midi'
+import Chat from './pages/chat'
 import Settings from './pages/settings'
 import Help from './pages/help'
 
@@ -13,6 +14,7 @@ export const router = createBrowserRouter([
       { path: '/', element: <Dashboard /> },
       { path: '/tools', element: <Tools /> },
       { path: '/midi', element: <Midi /> },
+      { path: '/chat', element: <Chat /> },
       { path: '/settings', element: <Settings /> },
       { path: '/help', element: <Help /> },
     ],

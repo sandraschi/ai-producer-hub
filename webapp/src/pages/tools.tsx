@@ -1,60 +1,50 @@
-import { Radio, Cpu, Monitor, Zap } from 'lucide-react'
+import { Radio, Cpu, Zap, Disc } from 'lucide-react'
 
 const toolCategories = [
   {
-    title: 'Workflow Tools',
-    icon: Radio,
-    description: 'Cross-server orchestration and media pipeline management.',
+    title: 'Generation', icon: Zap,
+    description: 'AI music generation via SongGeneration LeVo.',
     tools: [
-      'arr_orchestrate - Unified media request with auto-routing',
-      'arr_calendar - Cross-arr release timeline',
-      'arr_agentic - Natural language media management',
-      'arr_stats - Consolidated stack statistics',
+      'songgen_to_deck(lyrics, genre, tempo) - Generate song -> Load to VDJ',
+      'album_factory(theme, num_tracks) - Multi-track album from theme',
+      'ai_dj_set(theme, num_tracks) - Generate DJ set across decks',
     ],
   },
   {
-    title: 'MIDI Tools',
-    icon: Cpu,
-    description: 'MIDI hardware control, monitoring, and routing.',
+    title: 'Production', icon: Radio,
+    description: 'Live and batch production workflows.',
     tools: [
-      'midi_list_devices - Enumerate connected MIDI controllers',
-      'midi_monitor - Live MIDI message viewer',
-      'midi_send - Send MIDI messages to devices',
-      'midi_route - Route MIDI between applications',
+      'live_stream_producer(theme, duration) - Set up live stream with AI music',
+      'ai_mashup(track_a, track_b) - Mashup plan from VDJ library search',
     ],
   },
   {
-    title: 'AI Agent Tools',
-    icon: Zap,
-    description: 'AI-powered music generation and intelligent assistance.',
+    title: 'MIDI', icon: Cpu,
+    description: 'MIDI hardware tools (requires python-rtmidi).',
     tools: [
-      'ai_generate - Generate music from text prompts',
-      'ai_analyze - Analyze audio for key, tempo, structure',
-      'ai_remix - AI-assisted remixing and arrangement',
-      'ai_agent_workflow - Multi-step creative agent workflows',
+      'list_midi_devices() - Enumerate connected MIDI devices',
+      'record_midi_performance(device, duration) - Record MIDI to file',
+      'send_midi_note(device, note, velocity) - Send MIDI note',
+      'play_midi_file(file, device) - Play MIDI file through output',
+      'midi_monitor(device) - Live MIDI message viewer',
+      'midi_to_ai_seed(midi_file) - Analyze MIDI for AI seed prompt',
     ],
   },
   {
-    title: 'Integration Tools',
-    icon: Monitor,
-    description: 'Cross-server bridge tools for the music production stack.',
+    title: 'Fleet', icon: Disc,
+    description: 'Fleet status and cooperation with audio stack servers.',
     tools: [
-      'virtualdj_bridge - Deck control via VirtualDJ',
-      'plex_media_bridge - Media server integration',
-      'reaper_bridge - DAW transport and track control',
-      'obs_mount - Scene and source management',
+      'hub_status() - Check all fleet server health',
+      'producer_help(topic) - Help for workflows',
     ],
   },
 ]
 
 export default function Tools() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="tools-page">
       {toolCategories.map((cat) => (
-        <div
-          key={cat.title}
-          className="bg-zinc-900 border border-zinc-800 rounded-lg p-5"
-        >
+        <div key={cat.title} className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
           <div className="flex items-center gap-3 mb-2">
             <cat.icon size={20} className="text-amber-500" />
             <h2 className="text-base font-semibold text-zinc-100">{cat.title}</h2>

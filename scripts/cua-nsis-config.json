@@ -1,0 +1,14 @@
+{
+    "product_name": "Ai Producer Hub MCP",
+    "install_dir": "%LOCALAPPDATA%\\Ai Producer Hub MCP",
+    "operator_exe": "ai-producer-hub-native.exe",
+    "backend_process_names": ["ai-producer-hub-native", "ai-producer-hub-backend"],
+    "backend_port": 10700,
+    "health_path": "/api/v1/health",
+    "diagnostics_path": "/api/v1/diagnostics",
+    "feature_smoke_path": "/api/v1/system/info",
+    "window_title_re": "Ai Producer Hub MCP",
+    "nsis_glob": "native/target/release/bundle/nsis/Ai Producer Hub MCP_*_x64-setup.exe",
+    "bridge_ok_text": "REST bridge reachable",
+    "uninstall_registry_filter": "*Ai Producer Hub MCP*"
+}

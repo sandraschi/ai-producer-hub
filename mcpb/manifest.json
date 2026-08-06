@@ -1,0 +1,38 @@
+{
+  "manifest_version": "0.2",
+  "name": "ai-producer-hub",
+  "version": "1.0.0",
+  "description": "AI Music Producer - Generate, Mix, Master, Stream (VirtualDJ + LeVo AI + Plex + Reaper + OBS)",
+  "author": { "name": "sandraschi" },
+  "server": {
+    "type": "python",
+    "entry_point": "src/ai_producer_hub/__main__.py",
+    "mcp_config": {
+      "command": "uv",
+      "args": ["run","--directory","${PWD}","python","-m","ai_producer_hub"],
+      "env": {
+        "PYTHONPATH": "${PWD}/src",
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  },
+  "tools": [
+    { "name": "songgen_to_deck", "description": "songgen_to_deck" },
+    { "name": "ai_dj_set", "description": "ai_dj_set" },
+    { "name": "remix_plex_track", "description": "remix_plex_track" },
+    { "name": "bpm_bridge_generator", "description": "bpm_bridge_generator" },
+    { "name": "live_stream_producer", "description": "live_stream_producer" },
+    { "name": "album_factory", "description": "album_factory" },
+    { "name": "karaoke_generator", "description": "karaoke_generator" },
+    { "name": "ai_mashup", "description": "ai_mashup" },
+    { "name": "hub_status", "description": "hub_status" },
+    { "name": "producer_help", "description": "producer_help" },
+    { "name": "list_midi_devices", "description": "list_midi_devices" },
+    { "name": "record_midi_performance", "description": "record_midi_performance" },
+    { "name": "send_midi_note", "description": "send_midi_note" },
+    { "name": "midi_to_reaper", "description": "midi_to_reaper" },
+    { "name": "midi_to_ai_seed", "description": "midi_to_ai_seed" },
+    { "name": "play_midi_file", "description": "play_midi_file" },
+    { "name": "midi_monitor", "description": "midi_monitor" }
+  ]
+}

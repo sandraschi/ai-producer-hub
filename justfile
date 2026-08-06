@@ -1,42 +1,45 @@
-﻿set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+set windows-shell := ["powershell.exe", "-NoProfile", "-Command"]
+set shell := ["powershell.exe", "-NoProfile", "-Command"]
 
-# SOTA Fleet-Standard Justfile
-
-set shell := ["powershell", "-c"]
-
-# Open the interactive recipe dashboard in the browser
 default:
     @just --list
 
-# --- 🚀 Operations ---
-
-# Start the server (Canonical)
+# Start the MCP server (stdio)
 run:
     uv run -m ai_producer_hub
 
-# START REPOSITORY: Standard Headless-Aware Startup
+# Start frontend webapp
+dev:
+    cd webapp && npx vite --port 10707 --host
+
+# START: Standard startup
 start:
-    pwsh.exe -NoProfile -ExecutionPolicy Bypass -File ./start.ps1
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./start.ps1
 
-# --- 🧪 Quality Gates ---
-
-# LINT: Check for code quality issues
 lint:
-    uv run ruff check .
+    uv run ruff check src/
 
-# FIX: Auto-repair linting issues
 fix:
-    uv run ruff check --fix .
-    uv run ruff format .
+    uv run ruff check --fix src/
+    uv run ruff format src/
 
-# TEST: Run the test suite
 test:
     uv run pytest
 
-# --- 🧹 Maintenance ---
+# Build Tauri NSIS installer
+build-native:
+    powershell.exe -NoProfile -File native/build.ps1
 
-# CLEAN: Purge artifacts and caches
-clean:
-    @Remove-Item -Recurse -Force .venv, .pytest_cache, .ruff_cache -ErrorAction SilentlyContinue
-    @Get-ChildItem -Recurse -Filter "__pycache__" | Remove-Item -Recurse -Force
+# CUA-NSIS smoke test
+cua-nsis-test:
+    uv run python scripts/cua-smoke.py
 
+# Bootstrap: install dev deps + pre-commit hook
+bootstrap:
+    uv sync --group dev
+    uv run pre-commit install
+    Write-Host "Pre-commit hooks installed." -ForegroundColor Green
+
+# Run CUA webapp test (pre-Tauri: start.ps1 stack + nav walk in browser)
+cua-webapp-test:
+    powershell.exe -NoProfile -File "{{justfile_directory()}}\scripts\just\cua-webapp-test.ps1"

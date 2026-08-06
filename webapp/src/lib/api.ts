@@ -1,4 +1,4 @@
-const API_BASE = 'http://127.0.0.1:10800'
+const API_BASE = 'http://127.0.0.1:10885'
 
 export async function checkHealth(): Promise<{ ok: boolean; error?: string }> {
   try {

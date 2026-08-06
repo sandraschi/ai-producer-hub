@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   Wrench,
   Piano,
+  MessageCircle,
   Settings,
   HelpCircle,
   ChevronLeft,
@@ -15,6 +16,7 @@ const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/tools', label: 'Tools', icon: Wrench },
   { to: '/midi', label: 'MIDI', icon: Piano },
+  { to: '/chat', label: 'Chat', icon: MessageCircle },
   { to: '/settings', label: 'Settings', icon: Settings },
   { to: '/help', label: 'Help', icon: HelpCircle },
 ]
