@@ -10,7 +10,7 @@ run:
 
 # Start frontend webapp
 dev:
-    cd webapp && npx vite --port 10707 --host
+    cd webapp; npx vite --port 10707 --host
 
 # START: Standard startup
 start:
