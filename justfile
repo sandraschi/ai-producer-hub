@@ -26,23 +26,12 @@ fix:
 test:
     uv run pytest
 
-# Build Tauri NSIS installer
-build-native:
-    powershell.exe -NoProfile -File native/build.ps1
-
-# CUA-NSIS smoke test
-cua-nsis-test:
-    uv run python scripts/cua-smoke.py
-
 # Bootstrap: install dev deps + pre-commit hook
 bootstrap:
     uv sync --group dev
     uv run pre-commit install
     Write-Host "Pre-commit hooks installed." -ForegroundColor Green
 
-# Run CUA webapp test (pre-Tauri: start.ps1 stack + nav walk in browser)
-cua-webapp-test:
-    powershell.exe -NoProfile -File "{{justfile_directory()}}\scripts\just\cua-webapp-test.ps1"
 # CUA smoke test with detailed report to reports and mcd
 cua-nsis-test:
 	uv run python scripts/cua-smoke.py --output-dir cua-reports
@@ -53,6 +42,4 @@ cua-webapp-test:
 	$date = Get-Date -Format "yyyy-MM-dd"; $md = "reports/cua-ai-producer-$date.md"; if (Test-Path $md) { Copy-Item $md "D:/Dev/repos/mcp-central-docs/reports/" -Force; Write-Host "Synced $md to mcd" }
 
 build-native:
-	$env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
-	Set-Location "{{justfile_directory()}}/src-tauri"
-	powershell -NoProfile -ExecutionPolicy Bypass -File "src-tauri/build.ps1"
+	$env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"; Set-Location "{{justfile_directory()}}/src-tauri"; powershell -NoProfile -ExecutionPolicy Bypass -File "src-tauri/build.ps1"
