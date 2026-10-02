@@ -793,8 +793,39 @@ ai_mashup(
 # ============================================================================
 
 
+def _run_http(host: str, port: int) -> None:
+    """HTTP mode for the webapp: /health plus streamable MCP at /mcp."""
+    import uvicorn
+    from starlette.applications import Starlette
+    from starlette.responses import JSONResponse
+    from starlette.routing import Mount, Route
+
+    async def health(request):
+        return JSONResponse(
+            {
+                "status": "ok",
+                "service": "ai-producer-hub",
+                "mounted_servers": sorted(MOUNTED_SERVERS),
+            }
+        )
+
+    mcp_asgi = mcp.http_app(path="/mcp")
+    app = Starlette(routes=[Route("/health", health), Mount("/", app=mcp_asgi)])
+    console.print(f"[green]AI Producer Hub HTTP on http://{host}:{port}[/green]")
+    uvicorn.run(app, host=host, port=port, log_level="info")
+
+
 def main():
     """Main entry point for AI Producer Hub."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="AI Producer Hub")
+    parser.add_argument("--serve", action="store_true", help="HTTP for webapp (same as --http)")
+    parser.add_argument("--http", action="store_true", help="HTTP for webapp")
+    parser.add_argument("--stdio", action="store_true", help="STDIO for Claude Desktop (default)")
+    parser.add_argument("--port", type=int, default=11171)
+    parser.add_argument("--host", default="127.0.0.1")
+    args = parser.parse_args()
     console.print("""
 [bold magenta]
 ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -826,6 +857,10 @@ def main():
     console.print(
         "[bold cyan]🎵 Massive AI integration active - autonomous production ready![/bold cyan]\n"
     )
+
+    if args.serve or args.http:
+        _run_http(args.host, args.port)
+        return
 
     try:
         mcp.run(transport="stdio")

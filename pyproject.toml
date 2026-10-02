@@ -40,6 +40,11 @@ dependencies = [
     "mido>=1.3.0",
     "starlette>=0.40.0",
     "uvicorn[standard]>=0.30.0",
+    # Required: imported unconditionally by ai_integration (module top level),
+    # so a default `uv sync` must provide them - the HTTP/stdio backend
+    # cannot even import without them.
+    "openai>=1.0.0",
+    "anthropic>=0.30.0",
 ]
 
 [project.optional-dependencies]
@@ -135,4 +140,11 @@ exclude_lines = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ai_producer_hub"]
+
+[dependency-groups]
+dev = [
+    "pillow>=12.3.0",
+    "pytesseract>=0.3.13",
+    "pywinauto>=0.6.9",
+]
 

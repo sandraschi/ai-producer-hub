@@ -9,6 +9,7 @@
     Backend = @{
         Kind       = 'module-serve'
         Module     = 'ai_producer_hub'
+        ServeArgs  = @('--serve', '--port', '11171')
         SyncExtras = @('dev')
     }
     Frontend = @{
