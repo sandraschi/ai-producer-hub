@@ -1,4 +1,4 @@
-﻿# Per-repo fleet start config for ai-producer-hub
+# Per-repo fleet start config for ai-producer-hub
 # Edit ports/backend target here - start.ps1 is fleet-standard.
 @{
     Name         = 'ai-producer-hub'
@@ -11,6 +11,7 @@
         Module     = 'ai_producer_hub'
         ServeArgs  = @('--serve', '--port', '11171')
         SyncExtras = @('dev')
+        SyncOnStart  = $true
     }
     Frontend = @{
         Kind           = 'vite-npm'
